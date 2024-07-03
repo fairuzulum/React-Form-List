@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ProfileList from "../../pages/components/ProfileList";
-import { useState } from "react";
-import Drawer from "../components/Drawer";
-import ProfileList2 from "../components/ProfileList2";
+import Loading from "../components/Loading";
 
 const Dashboard = () => {
   const handleLogout = () => {
@@ -10,45 +8,39 @@ const Dashboard = () => {
     localStorage.removeItem("password");
     window.location.href = "/";
   };
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+  }, []);
+
   const email = localStorage.getItem("email");
-
-  // Initial state of profiles
-  const [profiles, setProfiles] = useState([]);
-
-  // Add profile
-  const addProfile = (profile) => {
-    setProfiles([...profiles, profile]);
-  };
-
-  // Trigger sidebar
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
   return (
-    <div>
-      <div className="nav flex justify-end h-20 bg-blue-600 text-white items-center px-10">
-        {email}
-        <button
-          onClick={toggleDrawer}
-          className="ml-4 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-          type="button"
-        >
-          Add employees
-        </button>
-        <button
-          onClick={handleLogout}
-          type="button"
-          className="ml-4 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-        >
-          Logout
-        </button>
-      </div>
-      <Drawer isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} addProfile={addProfile}/>
-      <ProfileList2 />
-      {/* <ProfileList profiles={profiles} /> */}
-    </div>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <div>
+          <div className="nav flex justify-between h-20 bg-blue-600 text-white items-center px-10">
+            <img src="images/logo.png" alt="logo" width={"120px"} />
+            <div className="flex items-center">
+              <span className="mr-4">{email}</span>
+              <button
+                onClick={handleLogout}
+                type="button"
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+          <ProfileList />
+        </div>
+      )}
+    </>
   );
 };
 

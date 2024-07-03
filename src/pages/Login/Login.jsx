@@ -1,17 +1,16 @@
 import React from "react";
 
 export default function Login() {
-
-   const handleLogin = () => {
+  const handleLogin = () => {
     event.preventDefault();
     localStorage.setItem("email", event.target.email.value);
     localStorage.setItem("password", event.target.password.value);
     window.location.href = "/dashboard";
-   }
-    
+  };
 
   return (
     <div className="flex justify-center min-h-screen items-center">
+      <img style={{ height: "450px" }} src="images/login.svg"></img>
       <div className="w-full max-w-xs">
         <h1 className="text-3xl font-bold mb-2 text-blue-600">Login</h1>
         <p className="font-medium text-slate-500 mb-8">

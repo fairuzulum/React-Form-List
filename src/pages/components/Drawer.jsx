@@ -6,10 +6,12 @@ const Drawer = ({ isOpen, toggleDrawer, addProfile }) => {
   // Initialize form
   const [form, setForm] = useState({
     fullName: "",
-    birthDate: "",
     gender: "",
-    address: "",
-    ktpNumber: "",
+    role: "",
+    phoneNo: "",
+    email: "",
+    project: "",
+    status: "",
   });
 
   // Handle changes
@@ -24,10 +26,12 @@ const Drawer = ({ isOpen, toggleDrawer, addProfile }) => {
     addProfile(form);
     setForm({
       fullName: "",
-      birthDate: "",
       gender: "",
-      address: "",
-      ktpNumber: "",
+      role: "",
+      phoneNo: "",
+      email: "",
+      project: "",
+      status: "",
     });
   };
 
@@ -61,15 +65,7 @@ const Drawer = ({ isOpen, toggleDrawer, addProfile }) => {
             textHeading="Full Name"
             textValue={form.fullName}
             textOnChange={handleChange}
-            placeholder="Example: Dasha Taran"
-            required
-          />
-          <InputTextBox
-            textId="birthDate"
-            textHeading="Date of Birth"
-            textValue={form.birthDate}
-            textOnChange={handleChange}
-            placeholder="Example: June 4, 1989"
+            placeholder="Dasha Taran"
             required
           />
           <InputTextBox
@@ -81,19 +77,43 @@ const Drawer = ({ isOpen, toggleDrawer, addProfile }) => {
             required
           />
           <InputTextBox
-            textId="address"
-            textHeading="Address"
-            textValue={form.address}
+            textId="role"
+            textHeading="Role"
+            textValue={form.role}
             textOnChange={handleChange}
-            placeholder="Example: 1 Hacker Way, San Francisco, CA 94111"
+            placeholder="Senior Fullstack Developer"
             required
           />
           <InputTextBox
-            textId="ktpNumber"
-            textHeading="KTP Number"
-            textValue={form.ktpNumber}
+            textId="phoneNo"
+            textHeading="Phone Number"
+            textValue={form.phoneNo}
             textOnChange={handleChange}
-            placeholder="Example: 3000000101900001"
+            placeholder="081234567890"
+            required
+          />
+          <InputTextBox
+            textId="email"
+            textHeading="Email Address"
+            textValue={form.email}
+            textOnChange={handleChange}
+            placeholder="dasha@example.com"
+            required
+          />
+          <InputTextBox
+            textId="project"
+            textHeading="Project"
+            textValue={form.project}
+            textOnChange={handleChange}
+            placeholder="JSON Web Token"
+            required
+          />
+          <InputTextBox
+            textId="status"
+            textHeading="Status"
+            textValue={form.status}
+            textOnChange={handleChange}
+            placeholder="On track"
             required
           />
           <button
