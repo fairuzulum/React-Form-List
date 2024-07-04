@@ -1,6 +1,8 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Drawer from "./Drawer";
+import ConfirmationModal from "./ConfirmationModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 function ProfileList() {
   // Initial state of profiles
@@ -11,10 +13,34 @@ function ProfileList() {
     setProfiles([...profiles, profile]);
   };
 
-  // Trigger sidebar
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // Update profile
+  const updateProfile = (index, updatedProfile) => {
+    const newProfiles = profiles.map((profile, i) =>
+      i === index ? updatedProfile : profile
+    );
+    setProfiles(newProfiles);
+  };
 
-  const toggleDrawer = () => {
+  // Delete profile with confirmation
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState(null);
+
+  const confirmDelete = (index) => {
+    setDeleteIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = () => {
+    const newProfiles = profiles.filter((_, i) => i !== deleteIndex);
+    setProfiles(newProfiles);
+    setIsModalOpen(false);
+  };
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [currentProfile, setCurrentProfile] = useState(null);
+
+  const toggleDrawer = (profile = null, index = null) => {
+    setCurrentProfile(profile ? { ...profile, index } : null);
     setIsDrawerOpen(!isDrawerOpen);
   };
 
@@ -22,13 +48,13 @@ function ProfileList() {
     <>
       <div className="col p-8 m-8 rounded-3xl bg-gradient-to-r from-blue-500 via-green-500 to-purple-600">
         <div>
-          <h4 class="text-2xl font-bold text-white dark:text-white pb-1">Employee List</h4>
-          <p class="text-base pb-5 text-gray-900 text-white dark:text-white">
+          <h4 className="text-2xl font-bold text-white dark:text-white pb-1">Employee List</h4>
+          <p className="text-base pb-5 text-gray-900 text-white dark:text-white">
             Here you can create and see the list of employees.
           </p>
         </div>
         <button
-          onClick={toggleDrawer}
+          onClick={() => toggleDrawer()}
           className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
           type="button"
         >
@@ -39,12 +65,18 @@ function ProfileList() {
         isOpen={isDrawerOpen}
         toggleDrawer={toggleDrawer}
         addProfile={addProfile}
+        updateProfile={updateProfile}
+        currentProfile={currentProfile}
+      />
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleDelete}
       />
       <div className="container mx-auto mt-8">
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              {/* <th className="py-2">ID</th> */}
               <th className="py-2">Name</th>
               <th className="py-2">Role</th>
               <th className="py-2">Contact</th>
@@ -56,7 +88,6 @@ function ProfileList() {
           <tbody>
             {profiles.map((person, index) => (
               <tr key={index} className="border-b">
-                {/* <td className="py-2 px-4">{person.id}</td> */}
                 <td className="py-2 px-4 flex items-center">
                   <img
                     src={`https://i.pravatar.cc/150?img=${index + 1}`}
@@ -85,9 +116,19 @@ function ProfileList() {
                     {person.status}
                   </span>
                 </td>
-                <td>
-                  <button>Edit</button>
-                  <button>Delete</button>
+                <td className="py-2 px-4 text-center">
+                  <button
+                    className="mr-2 text-blue-500 hover:underline"
+                    onClick={() => toggleDrawer(person, index)}
+                  >
+                    <FontAwesomeIcon icon={faEdit} />
+                  </button>
+                  <button
+                    className="text-red-500 hover:underline"
+                    onClick={() => confirmDelete(index)}
+                  >
+                    <FontAwesomeIcon icon={faTrashAlt} />
+                  </button>
                 </td>
               </tr>
             ))}

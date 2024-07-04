@@ -1,9 +1,7 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputTextBox from "../Dashboard/components/InputTextBox";
 
-const Drawer = ({ isOpen, toggleDrawer, addProfile }) => {
-  // Initialize form
+const Drawer = ({ isOpen, toggleDrawer, addProfile, updateProfile, currentProfile }) => {
   const [form, setForm] = useState({
     fullName: "",
     gender: "",
@@ -14,38 +12,45 @@ const Drawer = ({ isOpen, toggleDrawer, addProfile }) => {
     status: "",
   });
 
-  // Handle changes
+  useEffect(() => {
+    if (currentProfile) {
+      setForm(currentProfile);
+    } else {
+      setForm({
+        fullName: "",
+        gender: "",
+        role: "",
+        phoneNo: "",
+        email: "",
+        project: "",
+        status: "",
+      });
+    }
+  }, [currentProfile]);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm({ ...form, [name]: value });
   };
 
-  // Handle submit data
   const handleSubmit = (event) => {
     event.preventDefault();
-    addProfile(form);
-    setForm({
-      fullName: "",
-      gender: "",
-      role: "",
-      phoneNo: "",
-      email: "",
-      project: "",
-      status: "",
-    });
+    if (currentProfile) {
+      updateProfile(currentProfile.index, form);
+    } else {
+      addProfile(form);
+    }
+    toggleDrawer();
   };
 
   return (
     <>
-      {/* Background overlay */}
       <div
         className={`fixed inset-0 bg-gray-800 bg-opacity-50 z-40 transition-opacity ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={toggleDrawer}
       ></div>
-
-      {/* Drawer */}
       <div
         id="drawer-example"
         className={`fixed top-0 left-0 z-50 h-screen p-4 overflow-y-auto transition-transform ${
@@ -54,12 +59,11 @@ const Drawer = ({ isOpen, toggleDrawer, addProfile }) => {
         tabIndex="-1"
         aria-labelledby="drawer-label"
       >
-        <h4 class="text-2xl font-bold dark:text-white">Welcome back!</h4>
-        <p class="text-base pb-5 text-gray-900 dark:text-white">
+        <h4 className="text-2xl font-bold dark:text-white">Welcome back!</h4>
+        <p className="text-base pb-5 text-gray-900 dark:text-white">
           How about filling some of your details first?
         </p>
-
-        <form class="max-w-sm mx-auto" onSubmit={handleSubmit}>
+        <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
           <InputTextBox
             textId="fullName"
             textHeading="Full Name"
@@ -117,11 +121,10 @@ const Drawer = ({ isOpen, toggleDrawer, addProfile }) => {
             required
           />
           <button
-            onClick={toggleDrawer}
             type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-100 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-100 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Submit Data
+            {currentProfile ? "Update Data" : "Submit Data"}
           </button>
         </form>
       </div>
